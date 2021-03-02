@@ -5,14 +5,22 @@ const Fornecedor = require("./fornecedor");
 
 roteador.get("/", async (req, res) => {
   const resultados = await TabelaFornecedor.listar();
-  res.send(JSON.stringify(resultados));
+  res.status(200).send(JSON.stringify(resultados));
 });
 
 roteador.post("/", async (req, res) => {
-  const dadosRecebidos = req.body;
-  const fornecedor = new Fornecedor(dadosRecebidos);
-  await fornecedor.criar();
-  res.send(JSON.stringify(fornecedor));
+  try {
+    const dadosRecebidos = req.body;
+    const fornecedor = new Fornecedor(dadosRecebidos);
+    await fornecedor.criar();
+    res.status(201).send(JSON.stringify(fornecedor));
+  } catch (err) {
+    res.send(
+      JSON.stringify({
+        mensagem: error.message,
+      })
+    );
+  }
 });
 
 roteador.get("/:idFornecedor", async (req, res) => {
@@ -20,11 +28,11 @@ roteador.get("/:idFornecedor", async (req, res) => {
     const id = requisicao.params.idFornecedor;
     const fornecedor = new Fornecedor({ id: id });
     await fornecedor.carregar();
-    res.send(JSON.stringify(fornecedor));
+    res.status(200).send(JSON.stringify(fornecedor));
   } catch (err) {
     res.send(
       JSON.stringify({
-        mesagem: error.message,
+        mensagem: error.message,
       })
     );
   }
@@ -37,11 +45,27 @@ roteador.put("/:idFornecedor", async (req, res) => {
     const dados = Object.assign({}, dadosRecebidos, { id: id });
     const fornecedor = new Fornecedor(dados);
     await fornecedor.atualizar();
-    res.end();
+    res.status(204).end();
   } catch (error) {
     res.send(
       JSON.stringify({
-        mesagem: erro.message,
+        mensagem: erro.message,
+      })
+    );
+  }
+});
+
+roteador.delete("/:idFornecedor", async (req, res) => {
+  try {
+    const id = req.params.idFornecedor;
+    const fornecedor = new Fornecedor({ id: id });
+    await fornecedor.carregar();
+    await fornecedor.remover();
+    res.status(204).end();
+  } catch (error) {
+    res.send(
+      JSON.stringify({
+        mensagem: erro.message,
       })
     );
   }
