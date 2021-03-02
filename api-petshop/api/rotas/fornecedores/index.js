@@ -2,9 +2,9 @@ const roteador = require("express").Router();
 
 const TabelaFornecedor = require("./modeloTabelaFornecedor");
 const Fornecedor = require("./fornecedor");
+const Serializador = require("../../Serializador");
 const SerializadorFornecedor = require("../../Serializador")
     .SerializadorFornecedor;
-const Serializador = require("../../Serializador");
 
 roteador.get("/", async (req, res) => {
     const resultados = await TabelaFornecedor.listar();
@@ -21,7 +21,8 @@ roteador.post("/", async (req, res, next) => {
         await fornecedor.criar();
         res.status(201);
         const serializador = new SerializadorFornecedor(
-            res.getHeader("Content-Type")
+            res.getHeader("Content-Type"),
+            ["email", "dataCriacao", "dataAtualizacao", "versao"]
         ).send(Serializador.serializar(fornecedor));
     } catch (err) {
         next(err);
