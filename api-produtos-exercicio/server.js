@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const models = require("./models");
 
-//Sync db
 models.sequelize
     .sync()
     .then(function () {
@@ -18,6 +17,8 @@ models.sequelize
     .catch(function (err) {
         console.log(err, "Something went wrong with the db connection");
     });
+
+require("./routes/routeUsuario")(app);
 
 const port = parseInt(process.env.PORT, 10) || 8000;
 app.set("port", port);
