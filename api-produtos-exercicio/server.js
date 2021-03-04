@@ -19,6 +19,7 @@ models.sequelize
     });
 
 require("./routes/routeUsuario")(app);
+require("./routes/routeProdutos")(app);
 
 const port = parseInt(process.env.PORT, 10) || 8000;
 app.set("port", port);
