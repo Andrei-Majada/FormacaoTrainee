@@ -16,13 +16,13 @@ module.exports = {
             .then((produto) => {
                 res.status(201).send(produto);
             })
-            .catch((err) => res.status(400).json(err));
+            .catch((err) => res.status(400).send(err));
     },
 
     editarProduto(req, res, next) {
         Products.findOne({
             where: {
-                id: req.params.idLivro,
+                id: req.params.idProduto,
             },
         })
             .then((produto) => {
@@ -35,5 +35,21 @@ module.exports = {
             .catch((err) => res.status(404).send(err));
     },
 
-    deletarProduto(req, res, next) {},
+    deletarProduto(req, res, next) {
+        Products.findOne({
+            where: {
+                id: req.params.idProduto,
+            },
+        })
+            .then((produto) => {
+                if (produto == null) {
+                    return res.status(400).send("Produto não encontrado!");
+                }
+
+                produto.destroy();
+
+                return res.status(200).send("Produto excluído com sucesso!");
+            })
+            .catch((err) => res.status(404).send(err));
+    },
 };
