@@ -32,7 +32,7 @@ module.exports = {
                 produto.save();
                 res.status(200).send(produto);
             })
-            .catch((err) => res.status(404).send(err));
+            .catch((err) => res.status(400).send("Produto não encontrado!"));
     },
 
     deletarProduto(req, res, next) {
@@ -51,5 +51,11 @@ module.exports = {
                 return res.status(200).send("Produto excluído com sucesso!");
             })
             .catch((err) => res.status(404).send(err));
+    },
+
+    listarProdutos(req, res, next) {
+        return Products.findAll({})
+            .then((produto) => res.status(302).send(produto))
+            .catch((err) => res.status(400).send("Nenhum produto encontrado!"));
     },
 };
