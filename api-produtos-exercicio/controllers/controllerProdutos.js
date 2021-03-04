@@ -1,4 +1,5 @@
 const Products = require("../models").Products;
+const Categorias = require("../models").Category;
 
 module.exports = {
     index(req, res, next) {
@@ -57,5 +58,16 @@ module.exports = {
         return Products.findAll({})
             .then((produto) => res.status(302).send(produto))
             .catch((err) => res.status(400).send("Nenhum produto encontrado!"));
+    },
+
+    criarCategoria(req, res, next) {
+        return Categorias.create({
+            nome: req.body.nome,
+            status: req.body.status,
+        })
+            .then((categoria) => {
+                res.status(201).send(categoria);
+            })
+            .catch((err) => res.status(400).send(err));
     },
 };
