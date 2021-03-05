@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const http = require("http");
 
 const app = express();
+require("dotenv").config();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,7 +22,7 @@ models.sequelize
 require("./routes/routeUsuario")(app);
 require("./routes/routeProdutos")(app);
 
-const port = parseInt(process.env.PORT, 10) || 8000;
+const port = parseInt(process.env.port, 10) || 8000;
 app.set("port", port);
 const server = http.createServer(app);
 server.listen(port);
