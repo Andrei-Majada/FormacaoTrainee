@@ -1,8 +1,22 @@
 const bcrypt = require("bcrypt");
 const { cpf } = require("cpf-cnpj-validator");
+const jwt = require("jsonwebtoken");
 
 const Usuarios = require("../models").User;
-const salt = 13;
+const salt = 10;
+
+function geraToken(usuario) {
+    return jwt.sign(
+        {
+            nome: usuario.nome,
+            email: usuario.email,
+        },
+        process.env.tokenKey,
+        {
+            expiresIn: "3h",
+        }
+    );
+}
 
 module.exports = {
     cadastrarUsuario(req, res, next) {
@@ -24,8 +38,32 @@ module.exports = {
         return res.status(400).send("Documento inválido!");
     },
 
-    logarUsuario(req, res, next) {
+    async logarUsuario(req, res, next) {
         if (req.body.email && req.body.senha) {
+            await Usuarios.findOne({
+                where: {
+                    email: req.body.email,
+                },
+            })
+                .then(async (usuario) => {
+                    console.log("usuario:", usuario);
+                    const senha = await bcrypt.compare(
+                        req.body.senha,
+                        usuario.senha
+                    );
+
+                    console.log("senha igual: ", senha);
+                    if (!senha) {
+                        return res.status(400).send("Senha incorreta!");
+                    }
+
+                    const token = geraToken(usuario);
+
+                    const bearer = "Bearer ".concat(token);
+
+                    return res.status(200).send(bearer);
+                })
+                .catch((err) => res.status(400).send(err));
         }
     },
 
