@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
             nome: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                primaryKey: true,
+                unique: true,
             },
             status: {
                 type: DataTypes.BOOLEAN,
@@ -13,6 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         {}
     );
+
+    Category.associate = (models) => {
+        Category.hasMany(models.Products, {
+            foreignKey: "categoria",
+            allowNull: false,
+            as: "categoriaNome",
+        });
+    };
 
     return Category;
 };

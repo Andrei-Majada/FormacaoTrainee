@@ -46,20 +46,16 @@ module.exports = {
                 },
             })
                 .then(async (usuario) => {
-                    console.log("usuario:", usuario);
                     const senha = await bcrypt.compare(
                         req.body.senha,
                         usuario.senha
                     );
 
-                    console.log("senha igual: ", senha);
                     if (!senha) {
                         return res.status(400).send("Senha incorreta!");
                     }
 
-                    const token = geraToken(usuario);
-
-                    const bearer = "Bearer ".concat(token);
+                    const bearer = "Bearer ".concat(geraToken(usuario));
 
                     return res.status(200).send(bearer);
                 })

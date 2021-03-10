@@ -1,4 +1,7 @@
-const Products = require("../models").Products;
+const Sequelize = require("sequelize");
+const { lt } = Sequelize.Op;
+
+const Produtos = require("../models").Products;
 const Categorias = require("../models").Category;
 
 module.exports = {
@@ -8,8 +11,8 @@ module.exports = {
         });
     },
 
-    criarProduto(req, res, next) {
-        return Products.create({
+    async criarProduto(req, res, next) {
+        return Produtos.create({
             nome: req.body.nome,
             preco: req.body.preco,
             categoria: req.body.categoria,
@@ -20,8 +23,8 @@ module.exports = {
             .catch((err) => res.status(400).send(err));
     },
 
-    editarProduto(req, res, next) {
-        Products.findOne({
+    async editarProduto(req, res, next) {
+        Produtos.findOne({
             where: {
                 id: req.params.idProduto,
             },
@@ -36,8 +39,8 @@ module.exports = {
             .catch((err) => res.status(400).send("Produto não encontrado!"));
     },
 
-    deletarProduto(req, res, next) {
-        Products.findOne({
+    async deletarProduto(req, res, next) {
+        Produtos.findOne({
             where: {
                 id: req.params.idProduto,
             },
@@ -54,19 +57,57 @@ module.exports = {
             .catch((err) => res.status(404).send(err));
     },
 
-    listarProdutos(req, res, next) {
-        return Products.findAll({})
+    async listarProdutos(req, res, next) {
+        return Produtos.findAll({})
             .then((produto) => res.status(302).send(produto))
             .catch((err) => res.status(400).send("Nenhum produto encontrado!"));
     },
 
-    criarCategoria(req, res, next) {
+    async criarCategoria(req, res, next) {
         return Categorias.create({
             nome: req.body.nome,
             status: req.body.status,
         })
             .then((categoria) => {
                 res.status(201).send(categoria);
+            })
+            .catch((err) => res.status(400).send(err));
+    },
+
+    async ListarProdutosNome(req, res, next) {
+        Produtos.findOne({
+            where: {
+                nome: req.params.nomeProduto,
+            },
+        })
+            .then((produto) => {
+                if (produto == null) {
+                    return res.status(400).send("Produto não encontrado!");
+                }
+                return res.status(302).send(produto);
+            })
+            .catch((err) => res.status(404).send(err));
+    },
+
+    async ListarProdutosAtivos(req, res, next) {
+        Categorias.findAll({
+            where: {
+                status: true,
+            },
+            include: [
+                {
+                    all: true,
+                    as: "Produtos",
+                    where: {
+                        preco: {
+                            [lt]: 10,
+                        },
+                    },
+                },
+            ],
+        })
+            .then((resultados) => {
+                return res.status(302).send(resultados);
             })
             .catch((err) => res.status(400).send(err));
     },

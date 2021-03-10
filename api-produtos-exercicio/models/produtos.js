@@ -10,13 +10,18 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            categoria: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
         },
         {}
     );
+
+    Products.associate = (models) => {
+        Products.belongsTo(models.Category, {
+            foreignKey: "categoria",
+            allowNull: false,
+            onDelete: "CASCADE",
+            as: "categoriaNome",
+        });
+    };
 
     return Products;
 };

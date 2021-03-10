@@ -6,6 +6,8 @@ const {
     deletarProduto,
     listarProdutos,
     criarCategoria,
+    ListarProdutosNome,
+    ListarProdutosAtivos,
 } = require("../controllers/controllerProdutos");
 //routes
 module.exports = (app) => {
@@ -14,5 +16,7 @@ module.exports = (app) => {
     app.put("/produto/editar/:idProduto", editarProduto); //editar produtos pelo id
     app.delete("/produto/excluir/:idProduto", deletarProduto); //excluir produto pelo id
     app.get("/produto/listar", listarProdutos); //listar todos os produtos
-    app.post("/categoria/criar", criarCategoria);
+    app.get("/produto/buscar/:nomeProduto", ListarProdutosNome); //buscar produto por nome
+    app.get("/produto/ativos", ListarProdutosAtivos); //buscar produtos das categorias ativas
+    app.post("/categoria/criar", criarCategoria); //criar novas categorias de produto
 };
