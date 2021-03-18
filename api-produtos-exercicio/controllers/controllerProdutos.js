@@ -105,6 +105,7 @@ module.exports = {
                     },
                 },
             ],
+            order: [["nome", "ASC"]],
         })
             .then((resultados) => {
                 return res.status(302).send(resultados);
