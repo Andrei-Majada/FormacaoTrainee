@@ -1,28 +1,20 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const http = require("http");
 
 const app = express();
 require("dotenv").config();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
+const DataBase = require("./database");
 const models = require("./models");
-
-models.sequelize
-    .sync()
-    .then(function () {
-        console.log("Database connected");
-    })
-    .catch(function (err) {
-        console.log(err, "Something went wrong with the db connection");
-    });
+DataBase(models);
 
 require("./routes/routeUsuario")(app);
 require("./routes/routeProdutos")(app);
 
-const port = parseInt(process.env.port, 10) || 8000;
+const port = process.env.port || 8000;
 app.set("port", port);
 const server = http.createServer(app);
 server.listen(port);

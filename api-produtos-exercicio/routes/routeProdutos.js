@@ -13,10 +13,10 @@ const {
 module.exports = (app) => {
     app.get("/", index); //index
     app.post("/produto/criar", criarProduto); //criar produtos
-    app.put("/produto/editar/:idProduto", editarProduto); //editar produtos pelo id
-    app.delete("/produto/excluir/:idProduto", deletarProduto); //excluir produto pelo id
+    app.put("/produto/:idProduto", editarProduto); //editar produtos pelo id
+    app.delete("/produto/:idProduto", deletarProduto); //excluir produto pelo id
     app.get("/produto/listar", listarProdutos); //listar todos os produtos
-    app.get("/produto/buscar/:nomeProduto", ListarProdutosNome); //buscar produto por nome
+    app.get("/produto/:nomeProduto", ListarProdutosNome); //buscar produto por nome
     app.get("/produto/ativos", ListarProdutosAtivos); //buscar produtos das categorias ativas
     app.post("/categoria/criar", criarCategoria); //criar novas categorias de produto
 };
