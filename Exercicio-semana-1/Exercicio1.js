@@ -8,12 +8,11 @@ productCategory.push({ id: 4, name: "Imóveis" });
 productCategory.push({ id: 5, name: "Periféricos" });
 
 //Percorrer a lista e mostrar no console só o nome da categoria.
-const nameCategory = productCategory.map((item) => console.log(item.name));
+const nameCategory = productCategory.forEach((item) => console.log(item.name));
 
 //Percorrer a lista e mostrar no console só a categoria "Eletrônicos".
-//poderia ter utilizado find
-const findCategory = productCategory.filter((item) => {
-  if (item.name === "Eletrônicos") {
-    console.log("ID: " + item.id + ", Name: " + item.name);
-  }
+const findCategory = productCategory.find((item) => {
+  return item.name === "Eletrônicos";
 });
+
+console.log(findCategory);
